@@ -5,7 +5,8 @@
 
 #include "ExampleParser.h"
 
-void ExampleParser::Init() {
+void ExampleParser::Init()
+{
   inputFile = "";
   outputFile = "";
   multiplier = 1;
@@ -14,9 +15,11 @@ void ExampleParser::Init() {
   registerArgument("-m", setMultiplier);
 }
 
-bool ExampleParser::setInputFile(std::string filename) {
-  struct stat buffer;   
-  if (stat(filename.c_str(), &buffer) != 0) {
+bool ExampleParser::setInputFile(std::string filename)
+{
+  struct stat buffer;
+  if (stat(filename.c_str(), &buffer) != 0)
+  {
     std::cout << "Input file \"" << filename << "\" does not exist" << std::endl;
     return false;
   }
@@ -24,17 +27,21 @@ bool ExampleParser::setInputFile(std::string filename) {
   return true;
 }
 
-bool ExampleParser::setOutputFile(std::string filename) {
+bool ExampleParser::setOutputFile(std::string filename)
+{
   outputFile = filename;
   return true;
 }
 
-bool ExampleParser::setMultiplier(std::string mult) {
+bool ExampleParser::setMultiplier(std::string mult)
+{
   double temp;
-  try {
+  try
+  {
     temp = stod(mult);
   }
-  catch(const std::invalid_argument& ia) {
+  catch (const std::invalid_argument &ia)
+  {
     std::cout << "Invalid Multiplier \"" << mult << "\"" << std::endl;
     return false;
   }

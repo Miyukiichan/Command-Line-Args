@@ -4,7 +4,8 @@
 
 #include "ExampleParser.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   ExampleParser::Init();
   if (!ExampleParser::parseArguments(argc, argv))
     return 1;
