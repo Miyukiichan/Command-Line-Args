@@ -8,7 +8,7 @@
 void ExampleParser::Init()
 {
   inputFile = "";
-  outputFile = "";
+  outputFile = "output.txt";
   multiplier = 1;
   registerArgument("-i", setInputFile);
   registerArgument("-o", setOutputFile);
