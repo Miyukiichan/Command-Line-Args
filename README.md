@@ -26,6 +26,5 @@ If a value of false is returned, it is recommended that the program gracefully e
 
 ## TODO
 
-- Commenting and documentation
 - Allow for a single parameter without associated options
 - Allow for parameter lists per option

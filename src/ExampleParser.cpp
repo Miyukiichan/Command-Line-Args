@@ -5,6 +5,7 @@
 
 #include "ExampleParser.h"
 
+/*Standard init function to set default property values and register arguments*/
 void ExampleParser::Init()
 {
   inputFile = "";
@@ -15,6 +16,7 @@ void ExampleParser::Init()
   registerArgument("-m", setMultiplier);
 }
 
+/*Checks that the given input file exists before setting the property*/
 bool ExampleParser::setInputFile(std::string filename)
 {
   struct stat buffer;
@@ -27,12 +29,14 @@ bool ExampleParser::setInputFile(std::string filename)
   return true;
 }
 
+/*Just sets the property. The output file need not exist*/
 bool ExampleParser::setOutputFile(std::string filename)
 {
   outputFile = filename;
   return true;
 }
 
+/*Performs a conversion from string to double. Catches any conversion error and prints an error message before returning false*/
 bool ExampleParser::setMultiplier(std::string mult)
 {
   double temp;
