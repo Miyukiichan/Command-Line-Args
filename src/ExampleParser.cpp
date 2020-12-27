@@ -22,7 +22,7 @@ bool ExampleParser::setInputFile(std::string filename)
   struct stat buffer;
   if (stat(filename.c_str(), &buffer) != 0)
   {
-    std::cout << "Input file \"" << filename << "\" does not exist" << std::endl;
+    std::cout << "Input file " << quote(filename) << " does not exist" << std::endl;
     return false;
   }
   inputFile = filename;
@@ -46,7 +46,7 @@ bool ExampleParser::setMultiplier(std::string mult)
   }
   catch (const std::invalid_argument &ia)
   {
-    std::cout << "Invalid Multiplier \"" << mult << "\"" << std::endl;
+    std::cout << "Invalid Multiplier " << quote(mult) << std::endl;
     return false;
   }
   multiplier = temp;

@@ -14,6 +14,8 @@ class ArgumentParser
 public:
   static bool parseArguments(int argc, char *argv[]);
   static void registerArgument(std::string argument, pfunc func);
+  static std::string quote(std::string str);
+  static std::string quote(double str);
 
 protected:
   /*Internal argument function map*/

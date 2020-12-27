@@ -15,13 +15,13 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
     //Check that argument has been registered
     if (argFuncs.count(argName) == 0)
     {
-      std::cout << "Unrecognised argument " << argName << std::endl;
+      std::cout << "Unrecognised argument " << quote(argName) << std::endl;
       return false;
     }
     //Check that argument has not been used previously. No duplicates allowed
     if (usedArgs.find(argName) != usedArgs.end())
     {
-      std::cout << "Argument \"" << argName << "\" used multiple times" << std::endl;
+      std::cout << "Argument " << quote(argName) << " used multiple times" << std::endl;
       return false;
     }
     std::string argValue = "";
@@ -35,7 +35,7 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
     //No value passed for that option
     if (argValue.empty())
     {
-      std::cout << "No parameter given for " << argName << std::endl;
+      std::cout << "No parameter given for " << quote(argName) << std::endl;
       return false;
     }
     //Get the respective callback for the registered argument and call it
@@ -51,4 +51,14 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
 void ArgumentParser::registerArgument(std::string argument, pfunc func)
 {
   argFuncs.emplace(argument, func);
+}
+
+std::string ArgumentParser::quote(std::string str)
+{
+  return "\"" + str + "\"";
+}
+
+std::string ArgumentParser::quote(double str)
+{
+  return quote(std::to_string(str));
 }
