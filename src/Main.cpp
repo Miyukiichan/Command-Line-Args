@@ -6,7 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-  ExampleParser::Init();
+  if (!ExampleParser::Initialize())
+    return 1;
   if (!ExampleParser::parseArguments(argc, argv))
     return 1;
   std::cout << "Input file is " << ExampleParser::quote(ExampleParser::inputFile) << std::endl;

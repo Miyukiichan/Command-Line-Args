@@ -26,5 +26,5 @@ If a value of false is returned, it is recommended that the program gracefully e
 
 ## TODO
 
-- Allow for a single parameter without associated options
+- Re-document restructured registration
 - Allow for parameter lists per option

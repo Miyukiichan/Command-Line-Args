@@ -6,14 +6,14 @@
 #include "ExampleParser.h"
 
 /*Standard init function to set default property values and register arguments*/
-void ExampleParser::Init()
+bool ExampleParser::Initialize()
 {
   inputFile = "";
   outputFile = "output.txt";
   multiplier = 1;
-  registerArgument("-i", setInputFile);
-  registerArgument("-o", setOutputFile);
-  registerArgument("-m", setMultiplier);
+  arguments = {"", "-o", "-m"};
+  functions = {setInputFile, setOutputFile, setMultiplier};
+  return Init();
 }
 
 /*Checks that the given input file exists before setting the property*/

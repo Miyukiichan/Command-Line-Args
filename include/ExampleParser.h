@@ -7,7 +7,7 @@
 class ExampleParser : public ArgumentParser
 {
 public:
-  static void Init();
+  static bool Initialize();
   /*Properties for each registered argument*/
   inline static std::string inputFile;
   inline static std::string outputFile;
