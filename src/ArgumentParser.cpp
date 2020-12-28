@@ -9,53 +9,61 @@
 bool ArgumentParser::parseArguments(int argc, char *argv[])
 {
   std::set<std::string> usedArgs; //Keep track of already used arguments
-  bool hasDefaultArgument = argFuncs.count("") == 0;
+  bool hasDefaultArgument = argFuncs.count("") == 0 || argListFuncs.count("") == 0;
   for (int i = 1; i < argc; i += 2)
   {
     std::string argName = argv[i];
-    std::string argValue = "";
+    std::vector<std::string> argValues;
+    bool isDefaultArgument = false;
     //Check that argument has been registered
-    if (argFuncs.count(argName) == 0)
+    if (argFuncs.count(argName) == 0 && argListFuncs.count(argName) == 0)
     {
       //Check if a default argument has been registered or if it has been used already
-      if (hasDefaultArgument || usedArgs.find("") != usedArgs.end())
+      if (!hasDefaultArgument || usedArgs.find("") != usedArgs.end())
       {
         std::cout << "Unrecognised argument " << quote(argName) << std::endl;
         return false;
       }
-      else
-      {
-        argValue = argName;
-        argName = "";
-        i--;
-      }
+      isDefaultArgument = true;
+      argName = "";
     }
-    if (argValue.empty())
+    bool isListValue = argListFuncs.count(argName) > 0;
+    //Check that argument has not been used previously. No duplicates allowed
+    if (usedArgs.find(argName) != usedArgs.end())
     {
-      //Check that argument has not been used previously. No duplicates allowed
-      if (usedArgs.find(argName) != usedArgs.end())
-      {
-        std::cout << "Argument " << quote(argName) << " used multiple times" << std::endl;
-        return false;
-      }
-      //Check that the next argument is not another option. If not, set that as the value, otherwise, the value is empty
-      if (i + 1 < argc)
-      {
-        std::string tmp = argv[i + 1];
-        if (tmp == argName || argFuncs.count(tmp) == 0)
-          argValue = tmp;
-      }
-      //No value passed for that option
-      if (argValue.empty())
-      {
-        std::cout << "No parameter given for " << quote(argName) << std::endl;
-        return false;
-      }
-    }
-    //Get the respective callback for the registered argument and call it
-    pfunc f = argFuncs[argName];
-    if (!(*f)(argValue))
+      std::cout << "Argument " << quote(argName) << " used multiple times" << std::endl;
       return false;
+    }
+    int j = isDefaultArgument ? i : i + 1;
+    for (j; j < argc; j++)
+    {
+      std::string temp = argv[j];
+      if (argValues.size() > 0 && !isListValue)
+        break;
+      if (temp == argName || (argFuncs.count(temp) == 0 && argListFuncs.count(temp) == 0))
+        argValues.push_back(temp);
+      else
+        break;
+    }
+    i = j - 2;
+    if (argValues.empty())
+    {
+      std::cout << "No parameter given for " << quote(argName) << std::endl;
+      return false;
+    }
+    if (!isListValue)
+    {
+      //Get the respective callback for the registered argument and call it
+      pfunc f = argFuncs[argName];
+      if (!(*f)(argValues[0]))
+        return false;
+    }
+    else
+    {
+      pfuncList f = argListFuncs[argName];
+      if (!(*f)(argValues))
+        return false;
+    }
     usedArgs.insert(argName); //We've now used this argument
   }
   return true;
@@ -74,16 +82,49 @@ bool ArgumentParser::registerArgument(std::string argument, pfunc func)
   return true;
 }
 
+bool ArgumentParser::registerListArgument(std::string argument, pfuncList func)
+{
+  if (argListFuncs.count(argument) > 0)
+  {
+    argument = argument.empty() ? "Default Argument" : argument;
+    std::cout << "Programmer error! " << quote(argument) << " already registered" << std::endl;
+    return false;
+  }
+  argListFuncs.emplace(argument, func);
+  return true;
+}
+
 bool ArgumentParser::Init()
 {
+  for (std::string str : arguments)
+  {
+    for (std::string listStr : listArguments)
+    {
+      if (str == listStr)
+      {
+        std::cout << "Programmer error! Argument used for regular and list registration lists" << std::endl;
+        return false;
+      }
+    }
+  }
   if (arguments.size() != functions.size())
   {
-    std::cout << "Programmer error! Argument and callback list count are not equal";
+    std::cout << "Programmer error! Argument and callback list count are not equal" << std::endl;
+    return false;
+  }
+  if (listArguments.size() != listFunctions.size())
+  {
+    std::cout << "Programmer error! List argument and callback list count are not equal" << std::endl;
     return false;
   }
   for (int i = 0; i < arguments.size(); i++)
   {
     if (!registerArgument(arguments[i], functions[i]))
+      return false;
+  }
+  for (int i = 0; i < listArguments.size(); i++)
+  {
+    if (!registerListArgument(listArguments[i], listFunctions[i]))
       return false;
   }
   return true;

@@ -26,5 +26,5 @@ If a value of false is returned, it is recommended that the program gracefully e
 
 ## TODO
 
-- Re-document restructured registration
-- Allow for parameter lists per option
+- Re-document restructured registration as well as other features
+- Refactor repeated code with template functions

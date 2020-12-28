@@ -11,8 +11,10 @@ bool ExampleParser::Initialize()
   inputFile = "";
   outputFile = "output.txt";
   multiplier = 1;
-  arguments = {"", "-o", "-m"};
-  functions = {setInputFile, setOutputFile, setMultiplier};
+  arguments = {"-o", "-m"};
+  functions = {setOutputFile, setMultiplier};
+  listArguments = {"", "-c"};
+  listFunctions = {setTestValues, setOtherTestValues};
   return Init();
 }
 
@@ -50,5 +52,17 @@ bool ExampleParser::setMultiplier(std::string mult)
     return false;
   }
   multiplier = temp;
+  return true;
+}
+
+bool ExampleParser::setTestValues(std::vector<std::string> values)
+{
+  count = values.size();
+  return true;
+}
+
+bool ExampleParser::setOtherTestValues(std::vector<std::string> values)
+{
+  other_count = values.size();
   return true;
 }
