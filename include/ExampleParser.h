@@ -15,7 +15,7 @@ public:
   inline static int count;
   inline static int other_count;
 
-protected:
+private:
   /*Callback functions*/
   static bool setInputFile(std::string filename);
   static bool setOutputFile(std::string filename);

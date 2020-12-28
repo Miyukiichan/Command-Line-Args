@@ -18,8 +18,6 @@ class ArgumentParser
 {
 public:
   static bool parseArguments(int argc, char *argv[]);
-  static bool registerArgument(std::string argument, pfunc func);
-  static bool registerListArgument(std::string argument, pfuncList func);
   static std::string quote(std::string str);
   static std::string quote(double str);
 
@@ -34,4 +32,8 @@ protected:
   inline static std::vector<pfuncList> listFunctions;
 
   static bool Init();
+
+private:
+  template <class T>
+  static bool checkAndRegisterArguments(std::vector<std::string> args, std::vector<T> funcs, std::map<std::string, T> &functionMap);
 };

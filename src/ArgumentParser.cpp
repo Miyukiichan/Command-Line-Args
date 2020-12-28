@@ -69,31 +69,6 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
   return true;
 }
 
-/*Wrapper function for adding the argument and callback to the internal map*/
-bool ArgumentParser::registerArgument(std::string argument, pfunc func)
-{
-  if (argFuncs.count(argument) > 0)
-  {
-    argument = argument.empty() ? "Default Argument" : argument;
-    std::cout << "Programmer error! " << quote(argument) << " already registered" << std::endl;
-    return false;
-  }
-  argFuncs.emplace(argument, func);
-  return true;
-}
-
-bool ArgumentParser::registerListArgument(std::string argument, pfuncList func)
-{
-  if (argListFuncs.count(argument) > 0)
-  {
-    argument = argument.empty() ? "Default Argument" : argument;
-    std::cout << "Programmer error! " << quote(argument) << " already registered" << std::endl;
-    return false;
-  }
-  argListFuncs.emplace(argument, func);
-  return true;
-}
-
 bool ArgumentParser::Init()
 {
   for (std::string str : arguments)
@@ -107,25 +82,29 @@ bool ArgumentParser::Init()
       }
     }
   }
-  if (arguments.size() != functions.size())
+  return checkAndRegisterArguments(arguments, functions, argFuncs) &&
+         checkAndRegisterArguments(listArguments, listFunctions, argListFuncs);
+}
+
+template <class T>
+bool ArgumentParser::checkAndRegisterArguments(std::vector<std::string> args, std::vector<T> funcs, std::map<std::string, T> &functionMap)
+{
+  if (args.size() != funcs.size())
   {
     std::cout << "Programmer error! Argument and callback list count are not equal" << std::endl;
     return false;
   }
-  if (listArguments.size() != listFunctions.size())
+  for (int i = 0; i < args.size(); i++)
   {
-    std::cout << "Programmer error! List argument and callback list count are not equal" << std::endl;
-    return false;
-  }
-  for (int i = 0; i < arguments.size(); i++)
-  {
-    if (!registerArgument(arguments[i], functions[i]))
+    std::string argument = args[i];
+    T func = funcs[i];
+    if (functionMap.count(argument) > 0)
+    {
+      argument = argument.empty() ? "Default Argument" : argument;
+      std::cout << "Programmer error! " << quote(argument) << " already registered" << std::endl;
       return false;
-  }
-  for (int i = 0; i < listArguments.size(); i++)
-  {
-    if (!registerListArgument(listArguments[i], listFunctions[i]))
-      return false;
+    }
+    functionMap.emplace(argument, func);
   }
   return true;
 }
