@@ -27,3 +27,4 @@ If a value of false is returned, it is recommended that the program gracefully e
 ## TODO
 
 - Re-document restructured registration as well as other features
+- Implement help option
