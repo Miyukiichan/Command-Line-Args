@@ -2,7 +2,7 @@
 
 ## Overview
 
-Cross platform C++ object oriented implementation of getopt. Requires C++17 or later.
+Cross platform C++ class based implementation of getopt. Requires C++17 or later.
 
 The principle of this utility is encapsulation of argument parsing and error checking. It makes use of registering argument options specifically within a subclass of ArgumentParser and assigning callbacks to them to handle the specific needs of that argument. For example, it may need converting to a number from a string and checking that the conversion happened properly (ie the user passes in a non-numerical value).
 
@@ -26,5 +26,6 @@ An example subclass and main function utilizing this parser can be found in this
   - listFunctions //List of function callbacks that accept a list as input (less common)
 - The corresponding argument and function lists must be the same size. The initialization will throw an error if they aren't. The number of regular and list arguments can be different. Also, arguments must be unique across both lists and cannot be reused. Doing this will also cause an error. Registering a default argument (one that does not have an option name like -i) is registered with an empty string ("").
 - As well as overriding some options and string variables, you can associate descriptions with arguments. These will be used in the default --help output. Similar to the function registration, these are defined in lists that are in the same order as the argument list. However, the size of the description list and argument list need not match, but there cannot be more descriptions than arguments. This will cause an error.
+- After the overriding/configuration, make sure to call Init at the end of this custom initialization function
 - Call the Initialization function in main. Exit if the return value is false.
 - Call parseArguments after this. Again, exit on return value of false.
