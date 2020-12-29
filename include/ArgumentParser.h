@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 
 /*Callbacks must take a string as an argument and return a boolean*/
 typedef bool (*pfunc)(std::string);
@@ -20,6 +21,8 @@ public:
   static bool parseArguments(int argc, char *argv[]);
   static std::string quote(std::string str);
   static std::string quote(double str);
+  template <class T>
+  static bool existsInSet(T arg, std::set<T> list);
 
 protected:
   /*Internal argument function map*/
@@ -43,10 +46,13 @@ protected:
   inline static std::string helperOption = "--help";
   inline static std::string defaultDescription = "No Description";
   inline static std::string defaultArgumentDescription = "Default Argument";
+  inline static bool allowEmptyArguments = false;
+  inline static bool allowDuplicateArguments = false;
 
 private:
   template <class T>
   static bool checkAndRegisterArguments(std::vector<std::string> args, std::vector<T> funcs, std::map<std::string, T> &functionMap);
   static bool registerDescriptions(std::vector<std::string> args, std::vector<std::string> descs, std::map<std::string, std::string> &descMap);
   static void printDescriptions(std::string sectionMessage, std::map<std::string, std::string> descMap, bool printNewLine = true);
+  static bool argumentExists(std::string arg);
 };

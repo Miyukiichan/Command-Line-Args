@@ -1,7 +1,6 @@
 /*Author: Sam Matthews (sam.matthews19638@gmail.com)*/
 
 #include <iostream>
-#include <set>
 
 #include "ArgumentParser.h"
 
@@ -9,8 +8,8 @@
 bool ArgumentParser::parseArguments(int argc, char *argv[])
 {
   std::set<std::string> usedArgs; //Keep track of already used arguments
-  bool hasDefaultArgument = argFuncs.count("") == 0 || argListFuncs.count("") == 0;
-  for (int i = 1; i < argc; i += 2)
+  bool hasDefaultArgument = argumentExists("");
+  for (int i = 1; i < argc; i++)
   {
     std::string argName = argv[i];
     if (argName == helperOption)
@@ -21,10 +20,10 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
     std::vector<std::string> argValues;
     bool isDefaultArgument = false;
     //Check that argument has been registered
-    if (argFuncs.count(argName) == 0 && argListFuncs.count(argName) == 0)
+    if (!argumentExists(argName))
     {
       //Check if a default argument has been registered or if it has been used already
-      if (!hasDefaultArgument || usedArgs.find("") != usedArgs.end())
+      if (!hasDefaultArgument || existsInSet(std::string(""), usedArgs))
       {
         std::cout << "Unrecognised argument " << quote(argName) << std::endl;
         return false;
@@ -34,7 +33,7 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
     }
     bool isListValue = argListFuncs.count(argName) > 0;
     //Check that argument has not been used previously. No duplicates allowed
-    if (usedArgs.find(argName) != usedArgs.end())
+    if (existsInSet(argName, usedArgs) && !allowDuplicateArguments)
     {
       std::cout << "Argument " << quote(argName) << " used multiple times" << std::endl;
       return false;
@@ -45,16 +44,20 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
       std::string temp = argv[j];
       if (argValues.size() > 0 && !isListValue)
         break;
-      if (temp == argName || (argFuncs.count(temp) == 0 && argListFuncs.count(temp) == 0))
+      if (temp == argName || !argumentExists(temp))
         argValues.push_back(temp);
       else
         break;
     }
-    i = j - 2;
+    i = j - 1;
     if (argValues.empty())
     {
-      std::cout << "No parameter given for " << quote(argName) << std::endl;
-      return false;
+      if (!allowEmptyArguments)
+      {
+        std::cout << "No parameter given for " << quote(argName) << std::endl;
+        return false;
+      }
+      argValues.push_back("");
     }
     if (!isListValue)
     {
@@ -156,6 +159,17 @@ bool ArgumentParser::registerDescriptions(std::vector<std::string> args, std::ve
     desc = desc.empty() ? noDescription : desc;
     descMap.emplace(arg, desc);
   }
+}
+
+bool ArgumentParser::argumentExists(std::string arg)
+{
+  return (argFuncs.count(arg) > 0 || argListFuncs.count(arg) > 0);
+}
+
+template <class T>
+bool ArgumentParser::existsInSet(T arg, std::set<T> list)
+{
+  return list.find(arg) != list.end();
 }
 
 std::string ArgumentParser::quote(std::string str)

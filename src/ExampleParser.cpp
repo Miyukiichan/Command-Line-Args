@@ -13,7 +13,9 @@ bool ExampleParser::Initialize()
   descriptions = {"Output file", "Multiplier"};
   listArguments = {"", "-c"};
   listFunctions = {setTestValues, setOtherTestValues};
-  descriptionPrinter = printHelpMessage;
+  //descriptionPrinter = printHelpMessage;
+  //allowEmptyArguments = true;
+  //allowDuplicateArguments = true;
   return Init();
 }
 
