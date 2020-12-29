@@ -14,7 +14,7 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
     std::string argName = argv[i];
     if (argName == helperOption)
     {
-      printHelpMessage();
+      descriptionPrinter();
       return false;
     }
     std::vector<std::string> argValues;
@@ -32,17 +32,18 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
       argName = "";
     }
     bool isListValue = argListFuncs.count(argName) > 0;
-    //Check that argument has not been used previously. No duplicates allowed
+    //Check that argument has not been used previously. Unless allowDuplicateArguments is overridden
     if (existsInSet(argName, usedArgs) && !allowDuplicateArguments)
     {
       std::cout << "Argument " << quote(argName) << " used multiple times" << std::endl;
       return false;
     }
+    //Search through the arguments until another option is found and append these to the list
     int j = isDefaultArgument ? i : i + 1;
     for (j; j < argc; j++)
     {
       std::string temp = argv[j];
-      if (argValues.size() > 0 && !isListValue)
+      if (argValues.size() > 0 && !isListValue) //Only need one value
         break;
       if (temp == argName || !argumentExists(temp))
         argValues.push_back(temp);
@@ -57,11 +58,11 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
         std::cout << "No parameter given for " << quote(argName) << std::endl;
         return false;
       }
-      argValues.push_back("");
+      argValues.push_back(""); //Need a standin value in case of allowEmptyArguments
     }
+    //Get the respective callback for the registered argument and call it
     if (!isListValue)
     {
-      //Get the respective callback for the registered argument and call it
       pfunc f = argFuncs[argName];
       if (!(*f)(argValues[0]))
         return false;
@@ -77,6 +78,7 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
   return true;
 }
 
+/*Prints the header message and then a list of arguments with their corresponding descriptions*/
 void ArgumentParser::printDescriptions(std::string sectionMessage, std::map<std::string, std::string> descMap, bool printNewLine)
 {
   if (descMap.size() == 0)
@@ -90,13 +92,9 @@ void ArgumentParser::printDescriptions(std::string sectionMessage, std::map<std:
     std::cout << std::endl;
 }
 
+/*Default help message printer*/
 void ArgumentParser::printHelpMessage()
 {
-  if (descriptionPrinter)
-  {
-    descriptionPrinter();
-    return;
-  }
   printDescriptions("Arguments:", descriptionMap);
   printDescriptions("List Arguments:", listDescriptionMap, false);
 }

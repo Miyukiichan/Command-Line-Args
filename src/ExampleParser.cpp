@@ -13,7 +13,7 @@ bool ExampleParser::Initialize()
   descriptions = {"Output file", "Multiplier"};
   listArguments = {"", "-c"};
   listFunctions = {setTestValues, setOtherTestValues};
-  //descriptionPrinter = printHelpMessage;
+  descriptionPrinter = printCustomHelpMessage; // Set callback to custom printing function
   //allowEmptyArguments = true;
   //allowDuplicateArguments = true;
   return Init();
@@ -68,7 +68,7 @@ bool ExampleParser::setOtherTestValues(std::vector<std::string> values)
   return true;
 }
 
-void ExampleParser::printHelpMessage()
+void ExampleParser::printCustomHelpMessage()
 {
-  std::cout << "TEST" << std::endl;
+  std::cout << "This is my custom help message" << std::endl;
 }

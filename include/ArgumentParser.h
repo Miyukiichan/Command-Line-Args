@@ -41,13 +41,14 @@ protected:
 
   static bool Init();
   static void printHelpMessage();
-  inline static void (*descriptionPrinter)();
+  inline static void (*descriptionPrinter)() = printHelpMessage; //Callback set to the default printing function
 
-  inline static std::string helperOption = "--help";
+  /*User options*/
+  inline static std::string helperOption = "--help"; // Option the user enters to receive the help message
   inline static std::string defaultDescription = "No Description";
-  inline static std::string defaultArgumentDescription = "Default Argument";
-  inline static bool allowEmptyArguments = false;
-  inline static bool allowDuplicateArguments = false;
+  inline static std::string defaultArgumentDescription = "Default Argument"; // Displayed in lieu of empty string
+  inline static bool allowEmptyArguments = false;                            // Eg ./parser.out -o -m 2 will not throw an error
+  inline static bool allowDuplicateArguments = false;                        // Eg ./parser.out -o test -o test2 will not throw an error
 
 private:
   template <class T>
