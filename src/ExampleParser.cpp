@@ -13,8 +13,10 @@ bool ExampleParser::Initialize()
   multiplier = 1;
   arguments = {"-o", "-m"};
   functions = {setOutputFile, setMultiplier};
+  descriptions = {"Output file", "Multiplier"};
   listArguments = {"", "-c"};
   listFunctions = {setTestValues, setOtherTestValues};
+  descriptionPrinter = printHelpMessage;
   return Init();
 }
 
@@ -65,4 +67,9 @@ bool ExampleParser::setOtherTestValues(std::vector<std::string> values)
 {
   other_count = values.size();
   return true;
+}
+
+void ExampleParser::printHelpMessage()
+{
+  std::cout << "TEST" << std::endl;
 }
