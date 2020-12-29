@@ -40,6 +40,10 @@ protected:
   static void printHelpMessage();
   inline static void (*descriptionPrinter)();
 
+  inline static std::string helperOption = "--help";
+  inline static std::string defaultDescription = "No Description";
+  inline static std::string defaultArgumentDescription = "Default Argument";
+
 private:
   template <class T>
   static bool checkAndRegisterArguments(std::vector<std::string> args, std::vector<T> funcs, std::map<std::string, T> &functionMap);

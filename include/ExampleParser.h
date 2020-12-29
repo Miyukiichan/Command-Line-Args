@@ -9,11 +9,11 @@ class ExampleParser : public ArgumentParser
 public:
   static bool Initialize();
   /*Properties for each registered argument*/
-  inline static std::string inputFile;
-  inline static std::string outputFile;
-  inline static double multiplier;
-  inline static int count;
-  inline static int other_count;
+  inline static std::string inputFile = "";
+  inline static std::string outputFile = "output.txt";
+  inline static double multiplier = 1;
+  inline static int count = 0;
+  inline static int other_count = 0;
 
 protected:
   static void printHelpMessage();

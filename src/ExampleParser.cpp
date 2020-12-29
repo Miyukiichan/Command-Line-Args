@@ -8,9 +8,6 @@
 /*Standard init function to set default property values and register arguments*/
 bool ExampleParser::Initialize()
 {
-  inputFile = "";
-  outputFile = "output.txt";
-  multiplier = 1;
   arguments = {"-o", "-m"};
   functions = {setOutputFile, setMultiplier};
   descriptions = {"Output file", "Multiplier"};

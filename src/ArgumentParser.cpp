@@ -13,7 +13,7 @@ bool ArgumentParser::parseArguments(int argc, char *argv[])
   for (int i = 1; i < argc; i += 2)
   {
     std::string argName = argv[i];
-    if (argName == "--help")
+    if (argName == helperOption)
     {
       printHelpMessage();
       return false;
@@ -131,7 +131,7 @@ bool ArgumentParser::checkAndRegisterArguments(std::vector<std::string> args, st
     T func = funcs[i];
     if (functionMap.count(argument) > 0)
     {
-      argument = argument.empty() ? "Default Argument" : argument;
+      argument = argument.empty() ? defaultArgumentDescription : argument;
       std::cout << "Programmer error! " << quote(argument) << " already registered" << std::endl;
       return false;
     }
@@ -147,11 +147,11 @@ bool ArgumentParser::registerDescriptions(std::vector<std::string> args, std::ve
     std::cout << "Programmer Error! Too many descriptions registered for arguments" << std::endl;
     return false;
   }
-  const std::string noDescription = "No Description";
+  const std::string noDescription = defaultDescription;
   for (int i = 0; i < args.size(); i++)
   {
     std::string arg = args[i];
-    arg = arg.empty() ? "Default Argument" : arg;
+    arg = arg.empty() ? defaultArgumentDescription : arg;
     std::string desc = (i < descs.size()) ? descs[i] : noDescription;
     desc = desc.empty() ? noDescription : desc;
     descMap.emplace(arg, desc);
